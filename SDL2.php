@@ -191,6 +191,9 @@ define("FTP_LAYER_SSL_ON"				, false);
 // The absolute path of the home of the FTP account.
 define("FTP_LAYER_PATH_ON_SERVER"		, "/home/username/");
 
+// set true to disable ajax loading, so that it is easy for bookmarking
+define("DIRECTORY_LINK_ON"				, true);
+
 ?>
 <?php
 //------------------------------------------------------------------------------
@@ -5632,7 +5635,7 @@ class ModuleFilename extends Module {
 			$className = "{$this->moduleName}ViewThumbnail";
 		}
 		if ($file->isDir) {
-			$attribute = "<a href='?cwdRelPath={$file->relPath}&view=$view' onclick='Sdl.$this->moduleName.main.onClickRedirect(event, \"$file->relPath\"); return false;' style='text-decoration:underline'>$file->basename</a>";
+			$attribute = "<a href='?cwdRelPath={$file->relPath}&view=$view' onclick='".(DIRECTORY_LINK_ON ? "return;" : "")."Sdl.$this->moduleName.main.onClickRedirect(event, \"$file->relPath\"); return false;' style='text-decoration:underline'>$file->basename</a>";
 		} else {
 			if($file->url) {
 				$attribute = "<a href='$file->url' onclick='Sdl.Event.stopPropagation(event);' style='text-decoration:none' target='_blank'>$file->basename</a>";
@@ -5652,7 +5655,7 @@ class ModuleFilename extends Module {
 		$basename = "Parent Directory";
 		$html = 
 			"<div class='{$this->moduleName}ViewList' id='{$this->moduleName}_..'>
-				<a href='?cwdRelPath={$relPath}&view=$view' onclick='Sdl.$this->moduleName.main.onClickRedirectParentDir(); return false;'>$basename</a>
+				<a href='?cwdRelPath={$relPath}&view=$view' onclick='".(DIRECTORY_LINK_ON ? "return;" : "")."Sdl.$this->moduleName.main.onClickRedirectParentDir(); return false;'>$basename</a>
 			</div>
 			";
 		return $html;

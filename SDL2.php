@@ -5757,13 +5757,18 @@ class ModuleFileSize extends Module {
 	function getHeader() {
 		return "<div class='{$this->moduleName}HeaderViewList'><span id='{$this->moduleName}Header'>" . text("SIZE") . "</span></div>";
 	}
+
+	function getDirSize($path) {
+	  $result=explode("\t",exec("du -sk '$path'"),2);
+	  return ($result[1]==$path ? $result[0] : -1); // -1 means error
+	}
 	
 	function getHtml($file, $id, $view) {
 		if ($view == "list") {$className = "{$this->moduleName}ViewList";}
 		else if ($view == "thumbnail") {$className = "{$this->moduleName}ViewThumbnail";}
 		if ($file->isDir) {
-			$filesize = "-";
-			$sortValue = -1;
+			$sortValue = $this->getDirSize($file->absPath)*1024;
+			$filesize = ($sortValue < 0 ? '-' : $this->getSizeString($sortValue));
 		} else {
 			$filesize = $this->getSizeString(filesize($file->absPath));
 			$sortValue = filesize($file->absPath);
